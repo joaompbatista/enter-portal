@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Enter | Data Analytics Portal</title>
+<style>
+:root{
+  --db:#0D3320;--mb:#1E7A4A;--lb:#C8EBD8;--vl:#EBF7F0;
+  --gy:#595959;--bd:#CCCCCC;--gn:#1A7A3C;--or:#C0392B;
+  --am:#E67E22;--pu:#6C3483;--teal:#0E7C7B
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Arial,sans-serif;color:#2c2c2c;background:#f4f7fb}
+
+/* ── Topbar ── */
+.topbar{background:var(--db);color:#fff;padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.tl{display:flex;align-items:center;gap:12px}
+.tt{font-size:16px;font-weight:700;letter-spacing:.3px}
+.ts{font-size:11px;opacity:.7;margin-top:1px}
+.tb{background:var(--mb);color:#fff;font-size:10px;padding:3px 9px;border-radius:10px;font-weight:700}
+
+/* ── Layout ── */
+.layout{display:flex;min-height:calc(100vh - 54px)}
+.sidebar{width:252px;background:#fff;border-right:1px solid var(--bd);padding:16px 0;position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;flex-shrink:0}
+.sl{font-size:10px;font-weight:700;color:var(--gy);text-transform:uppercase;letter-spacing:1px;padding:10px 18px 4px}
+.si{display:flex;align-items:center;gap:9px;padding:8px 18px;font-size:13px;color:#333;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.si:hover{background:var(--vl);color:var(--mb)}
+.si.active{background:var(--vl);color:var(--mb);border-left-color:var(--mb);font-weight:600}
+.si-icon{font-size:14px;width:18px;text-align:center}
+.si-cnt{margin-left:auto;background:var(--lb);color:var(--db);font-size:10px;padding:1px 6px;border-radius:8px;font-weight:700}
+.main{flex:1;padding:28px;overflow-y:auto}
+.section{display:none;max-width:1080px;margin:0 auto}
+.section.active{display:block}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,var(--db) 0%,var(--mb) 100%);color:#fff;border-radius:12px;padding:36px 36px 30px;margin-bottom:24px}
+.hero h1{font-size:26px;font-weight:700;margin-bottom:6px}
+.hero p{font-size:13px;opacity:.85;line-height:1.6;max-width:680px}
+.hm-row{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap}
+.hm{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 14px;font-size:11px}
+.hm span{display:block;font-weight:700;font-size:15px;margin-top:2px}
+
+/* ── Cards ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px}
+.card{background:#fff;border-radius:10px;padding:18px;border:1px solid var(--bd);cursor:pointer;transition:all .2s}
+.card:hover{box-shadow:0 4px 16px rgba(13,51,32,.12);border-color:var(--mb);transform:translateY(-1px)}
+.ci{font-size:26px;margin-bottom:8px}
+.ct{font-size:13px;font-weight:700;color:var(--db);margin-bottom:5px}
+.cd{font-size:11px;color:var(--gy);line-height:1.5}
+.ctag{display:inline-block;margin-top:8px;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.tdev{background:var(--lb);color:var(--db)}
+.tuser{background:#D5F5E3;color:var(--gn)}
+.tall{background:#F5E6FF;color:var(--pu)}
+
+/* ── Section header ── */
+.ph{margin-bottom:20px}
+.ph h2{font-size:20px;font-weight:700;color:var(--db);margin-bottom:5px}
+.ph p{font-size:12px;color:var(--gy)}
+.divider{height:3px;background:linear-gradient(to right,var(--mb),var(--lb));border-radius:2px;margin-bottom:20px}
+
+/* ── Tables ── */
+.dt{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.dt th{background:var(--db);color:#fff;padding:9px 10px;text-align:left;font-weight:600;font-size:11px}
+.dt td{padding:8px 10px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.4}
+.dt tr:hover td{background:#d4edda44}
+
+/* ── Blocks ── */
+.block{background:#fff;border-radius:10px;border:1px solid var(--bd);padding:18px 22px;margin-bottom:14px}
+.block h3{font-size:14px;font-weight:700;color:var(--db);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.block p{font-size:12px;color:var(--gy);line-height:1.6;margin-bottom:6px}
+
+/* ── Info grid ── */
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ii{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:11px 14px}
+.ii .lbl{font-size:10px;font-weight:700;color:var(--gy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.ii .val{font-size:13px;color:var(--db);font-weight:600}
+
+/* ── Alerts ── */
+.alert{border-radius:8px;padding:11px 14px;font-size:12px;margin-bottom:10px;display:flex;gap:9px;align-items:flex-start}
+.alert-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.ai{background:var(--vl);border-left:3px solid var(--mb);color:#0D3320}
+.at{background:#E9F7EF;border-left:3px solid var(--gn);color:#145A32}
+.aw{background:#FDEDEC;border-left:3px solid var(--or);color:#7B241C}
+
+/* ── Search bar ── */
+.sbar{display:flex;gap:10px;margin-bottom:16px}
+.sbar input{flex:1;padding:9px 13px;border:1px solid var(--bd);border-radius:8px;font-size:12px;outline:none}
+.sbar input:focus{border-color:var(--mb);box-shadow:0 0 0 2px var(--lb)}
+
+/* ── Flow arrows ── */
+.af{display:flex;align-items:center;gap:8px;margin:14px 0;flex-wrap:wrap}
+.an{background:var(--lb);border:2px solid var(--mb);border-radius:10px;padding:10px 14px;text-align:center;font-size:11px;font-weight:600;color:var(--db);flex:1;min-width:110px}
+.an small{display:block;font-weight:400;font-size:10px;margin-top:3px;opacity:.8}
+.aa{color:var(--mb);font-size:18px;font-weight:700;flex-shrink:0}
+
+/* ── Badge ── */
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
+.b-blue{background:var(--lb);color:var(--db)}
+.b-green{background:#D5F5E3;color:var(--gn)}
+.b-amber{background:#FEF9E7;color:#7D6608}
+.b-grey{background:#F0F0F0;color:#555}
+
+/* ── Metabase embed ── */
+.mb-wrap{background:#fff;border-radius:10px;border:1px solid var(--bd);overflow:hidden;margin-bottom:14px}
+.mb-header{background:var(--db);color:#fff;padding:12px 18px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
+.mb-frame{width:100%;height:700px;border:none;display:block}
+
+@media(max-width:700px){.sidebar{display:none}.main{padding:14px}.ig{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     TOPBAR
+══════════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="tl">
+    <div style="font-size:22px">🏠</div>
+    <div>
+      <div class="tt">Enter | Data Analytics Portal</div>
+      <div class="ts">Building Retrofitting Intelligence · Neon PostgreSQL · Metabase</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="tb">v1.0</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LAYOUT
+══════════════════════════════════════════════ -->
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sl">General</div>
+  <div class="si active" onclick="show('home')"><span class="si-icon">🏠</span>Home</div>
+  <div class="si" onclick="show('architecture')"><span class="si-icon">🏗️</span>Architecture</div>
+  <div class="sl">Data Model</div>
+  <div class="si" onclick="show('tables')"><span class="si-icon">🗄️</span>Tables <span class="si-cnt">9</span></div>
+  <div class="sl">Analytics</div>
+  <div class="si" onclick="show('dashboard')"><span class="si-icon">📊</span>Project Overview</div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ══════════════════════════════════
+     HOME
+══════════════════════════════════ -->
+<div id="home" class="section active">
+  <div class="hero">
+    <h1>🏠 Enter | Building Retrofitting Intelligence</h1>
+    <p>A data analytics platform built to support Enter's mission of making homes carbon-free. This portal documents the data model, architecture, and dashboards used to track retrofitting projects, energy savings forecasts, and homeowner satisfaction across Germany.</p>
+    <div class="hm-row">
+      <div class="hm">Database<span>Neon PostgreSQL</span></div>
+      <div class="hm">Tables<span>9</span></div>
+      <div class="hm">Dashboards<span>1</span></div>
+      <div class="hm">Projects<span>10</span></div>
+      <div class="hm">Crews<span>5</span></div>
+      <div class="hm">Cities<span>7</span></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card" onclick="show('architecture')">
+      <div class="ci">🏗️</div>
+      <div class="ct">Architecture</div>
+      <div class="cd">End-to-end data stack: Neon PostgreSQL, Railway, and Metabase for analytics and dashboarding.</div>
+      <span class="ctag tdev">Technical</span>
+    </div>
+    <div class="card" onclick="show('tables')">
+      <div class="ci">🗄️</div>
+      <div class="ct">Tables (9)</div>
+      <div class="cd">Catalogue of 9 tables: dimensions, facts, and their relationships across the data model.</div>
+      <span class="ctag tdev">Technical</span>
+    </div>
+    <div class="card" onclick="show('dashboard')">
+      <div class="ci">📊</div>
+      <div class="ct">Project Overview</div>
+      <div class="cd">Live dashboard tracking project status, budget performance, CO2 savings, and energy efficiency.</div>
+      <span class="ctag tuser">User</span>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>📋 Project Context</h3>
+    <p>Enter is a Berlin-based climate-tech company with €35 million in funding, working to make energy-neutral buildings a reality for homeowners across Germany. The company aggregates and analyses building data to help homeowners reduce energy costs and increase property value through targeted retrofitting measures such as heat pumps, insulation, solar PV, and window replacement.</p>
+    <p>This portal demonstrates a data analytics layer built around Enter's operational model. It covers the full lifecycle of a retrofitting project, from contract signature through execution to homeowner satisfaction, with a particular focus on forecast accuracy and CSAT scores, which are central KPIs for the Senior Data Analyst role.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ARCHITECTURE
+══════════════════════════════════ -->
+<div id="architecture" class="section">
+  <div class="ph">
+    <h2>🏗️ Architecture</h2>
+    <p>End-to-end data flow from storage to dashboard.</p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="block">
+    <h3>🔄 Data Flow</h3>
+    <div class="af">
+      <div class="an">Neon PostgreSQL<small>Cloud database</small></div>
+      <div class="aa">→</div>
+      <div class="an">Railway<small>Hosting infrastructure</small></div>
+      <div class="aa">→</div>
+      <div class="an">Metabase<small>BI & dashboarding</small></div>
+      <div class="aa">→</div>
+      <div class="an">GitHub Pages<small>Portal delivery</small></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>🛠️ Technology Stack</h3>
+    <table class="dt">
+      <thead>
+        <tr><th>Layer</th><th>Technology</th><th>Detail</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Storage</td><td>Neon PostgreSQL</td><td>Serverless PostgreSQL · AWS us-east-1</td><td>Hosts all dimension and fact tables</td></tr>
+        <tr><td>Infrastructure</td><td>Railway</td><td>Docker · europe-west4</td><td>Hosts the Metabase instance</td></tr>
+        <tr><td>Analytics</td><td>Metabase</td><td>Open-source · self-hosted</td><td>Dashboard creation and public embedding</td></tr>
+        <tr><td>Portal</td><td>GitHub Pages</td><td>Static HTML · public</td><td>Delivers this documentation portal</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="block">
+    <h3>🗃️ Data Model Overview</h3>
+    <p>The database follows a star schema with 4 dimension tables, 1 calendar table, and 4 fact tables. Dimension tables describe entities (crews, homeowners, properties, contracts). Fact tables capture measurable events (projects, energy readings, forecasts, CSAT surveys).</p>
+    <div class="ig" style="margin-top:12px">
+      <div class="ii"><div class="lbl">Dimension tables</div><div class="val">4 + 1 calendar</div></div>
+      <div class="ii"><div class="lbl">Fact tables</div><div class="val">4</div></div>
+      <div class="ii"><div class="lbl">Total rows (approx.)</div><div class="val">~1,100</div></div>
+      <div class="ii"><div class="lbl">Date range</div><div class="val">2023 – 2025</div></div>
+    </div>
+  </div>
+
+  <div class="alert ai">
+    <div class="alert-icon">ℹ️</div>
+    <div>All data in this portal is fictitious and generated for demonstration purposes. It is designed to reflect realistic patterns aligned with Enter's business model and the KPIs described in the Senior Data Analyst role.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     TABLES
+══════════════════════════════════ -->
+<div id="tables" class="section">
+  <div class="ph">
+    <h2>🗄️ Tables</h2>
+    <p>All 9 tables in the Enter Portal data model.</p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="sbar">
+    <input type="text" id="tableSearch" placeholder="Search tables..." oninput="filterTables()"/>
+  </div>
+
+  <table class="dt" id="tableList">
+    <thead>
+      <tr><th>Table</th><th>Type</th><th>Columns</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>dim_date</strong></td>
+        <td><span class="badge b-blue">Dimension</span></td>
+        <td>8</td>
+        <td>Calendar table covering 2023–2025. Used to support time-based filtering across all fact tables.</td>
+      </tr>
+      <tr>
+        <td><strong>dim_crews</strong></td>
+        <td><span class="badge b-blue">Dimension</span></td>
+        <td>5</td>
+        <td>Internal retrofitting crews, each led by a named crew lead and specialised in a specific intervention type (e.g. Heat Pumps, Solar PV).</td>
+      </tr>
+      <tr>
+        <td><strong>dim_homeowners</strong></td>
+        <td><span class="badge b-blue">Dimension</span></td>
+        <td>7</td>
+        <td>Homeowners who have engaged with Enter. Includes contact details, city, and acquisition channel.</td>
+      </tr>
+      <tr>
+        <td><strong>dim_properties</strong></td>
+        <td><span class="badge b-blue">Dimension</span></td>
+        <td>9</td>
+        <td>Physical properties registered for retrofitting. Records property type, construction year, floor area, and energy class before and after intervention.</td>
+      </tr>
+      <tr>
+        <td><strong>dim_contracts</strong></td>
+        <td><span class="badge b-blue">Dimension</span></td>
+        <td>7</td>
+        <td>Contracts signed between Enter and homeowners. Links a property and a crew, and defines contract type, value, and status.</td>
+      </tr>
+      <tr>
+        <td><strong>fact_projects</strong></td>
+        <td><span class="badge b-green">Fact</span></td>
+        <td>13</td>
+        <td>Core fact table tracking individual retrofitting projects. Captures start and end dates, actual vs budgeted cost, CO2 savings, energy savings percentage, and project status.</td>
+      </tr>
+      <tr>
+        <td><strong>fact_energy_readings</strong></td>
+        <td><span class="badge b-green">Fact</span></td>
+        <td>7</td>
+        <td>Quarterly energy consumption readings per property. Breaks down total consumption into heating and electricity, with associated cost in euros.</td>
+      </tr>
+      <tr>
+        <td><strong>fact_forecasts</strong></td>
+        <td><span class="badge b-green">Fact</span></td>
+        <td>9</td>
+        <td>Energy consumption and savings forecasts produced per property and crew. Compares forecasted values against actuals to calculate forecast accuracy percentage, a key KPI for crew leads.</td>
+      </tr>
+      <tr>
+        <td><strong>fact_csat_surveys</strong></td>
+        <td><span class="badge b-green">Fact</span></td>
+        <td>12</td>
+        <td>Homeowner satisfaction surveys collected after deep dive sessions, forecast reviews, and progress updates with crew leads. Captures scores for data insights quality, forecast accuracy, communication, and overall satisfaction. Includes a flag indicating whether the crew lead used the forecasting product as the primary source of truth.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════
+     DASHBOARD
+══════════════════════════════════ -->
+<div id="dashboard" class="section">
+  <div class="ph">
+    <h2>📊 Project Overview</h2>
+    <p>Live dashboard tracking project status, budget vs actual cost, CO2 savings by crew, and average energy savings.</p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="alert at">
+    <div class="alert-icon">✅</div>
+    <div>This dashboard is publicly embedded from Metabase (self-hosted on Railway). No login is required to view it.</div>
+  </div>
+
+  <div class="mb-wrap">
+    <div class="mb-header">📊 Project Overview | Enter Portal</div>
+    <iframe
+      class="mb-frame"
+      src="https://metabase-production-905a.up.railway.app/public/dashboard/7cfe3f8d-6e8f-4f0c-a330-773fbb5b6005"
+      allowtransparency="true">
+    </iframe>
+  </div>
+
+  <div class="block">
+    <h3>📋 Dashboard Contents</h3>
+    <table class="dt">
+      <thead>
+        <tr><th>Visualisation</th><th>Source table</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Projects by Status</td><td>fact_projects</td><td>Count of projects grouped by status (Completed, In Progress, Planned).</td></tr>
+        <tr><td>Budget vs Actual Cost</td><td>fact_projects</td><td>Sum of budgeted and actual cost by project status, highlighting over/under spend.</td></tr>
+        <tr><td>CO2 Savings by Crew</td><td>fact_projects</td><td>Total annual CO2 savings in kg per crew, measuring environmental impact.</td></tr>
+        <tr><td>Avg Energy Savings by Status</td><td>fact_projects</td><td>Average energy savings percentage by project status.</td></tr>
+        <tr><td>Total Projects</td><td>fact_projects</td><td>KPI card showing total number of projects.</td></tr>
+        <tr><td>Total CO2 Saved</td><td>fact_projects</td><td>KPI card showing total annual CO2 savings across all completed projects.</td></tr>
+        <tr><td>Total Contract Value</td><td>dim_contracts</td><td>KPI card showing the total value of all contracts signed.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.si').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.si').forEach(s => {
+    if (s.getAttribute('onclick') && s.getAttribute('onclick').includes("'" + id + "'")) {
+      s.classList.add('active');
+    }
+  });
+}
+
+function filterTables() {
+  const q = document.getElementById('tableSearch').value.toLowerCase();
+  document.querySelectorAll('#tableList tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
