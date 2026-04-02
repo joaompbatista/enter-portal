@@ -104,7 +104,7 @@ body{font-family:"Segoe UI",Arial,sans-serif;color:#2c2c2c;background:#f4f7fb}
 /* ── Metabase embed ── */
 .mb-wrap{background:#fff;border-radius:10px;border:1px solid var(--bd);overflow:hidden;margin-bottom:14px}
 .mb-header{background:var(--db);color:#fff;padding:12px 18px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px}
-.mb-frame{width:100%;height:700px;border:none;display:block}
+.mb-frame{width:100%;height:1100px;border:none;display:block}
 
 @media(max-width:700px){.sidebar{display:none}.main{padding:14px}.ig{grid-template-columns:1fr}}
 </style>
@@ -402,13 +402,13 @@ body{font-family:"Segoe UI",Arial,sans-serif;color:#2c2c2c;background:#f4f7fb}
         <tr><th>Visualisation</th><th>Source table</th><th>Description</th></tr>
       </thead>
       <tbody>
-        <tr><td>Projects by Status</td><td>fact_projects</td><td>Count of projects grouped by status (Completed, In Progress, Planned).</td></tr>
-        <tr><td>Budget vs Actual Cost</td><td>fact_projects</td><td>Sum of budgeted and actual cost by project status, highlighting over/under spend.</td></tr>
-        <tr><td>CO2 Savings by Crew</td><td>fact_projects</td><td>Total annual CO2 savings in kg per crew, measuring environmental impact.</td></tr>
-        <tr><td>Avg Energy Savings by Status</td><td>fact_projects</td><td>Average energy savings percentage by project status.</td></tr>
-        <tr><td>Total Projects</td><td>fact_projects</td><td>KPI card showing total number of projects.</td></tr>
-        <tr><td>Total CO2 Saved</td><td>fact_projects</td><td>KPI card showing total annual CO2 savings across all completed projects.</td></tr>
+        <tr><td>Total Projects</td><td>fact_projects</td><td>KPI card showing the total number of projects.</td></tr>
+        <tr><td>Total CO2 Saved</td><td>fact_projects</td><td>KPI card showing total annual CO2 savings in kg across all projects.</td></tr>
         <tr><td>Total Contract Value</td><td>dim_contracts</td><td>KPI card showing the total value of all contracts signed.</td></tr>
+        <tr><td>Projects by Status</td><td>fact_projects</td><td>Pie chart showing the distribution of projects by status: Completed, In Progress, and Planned.</td></tr>
+        <tr><td>Properties by City</td><td>dim_properties</td><td>Pin map showing the location of each property across Germany, with a tooltip displaying city name and number of properties.</td></tr>
+        <tr><td>Energy Savings by Contract Type</td><td>fact_projects, dim_contracts</td><td>Bar chart showing average energy savings percentage grouped by contract type (Full Retrofit, Insulation Only, Solar PV, etc.).</td></tr>
+        <tr><td>Project Table</td><td>fact_projects, dim_contracts, dim_properties</td><td>Detailed table showing all projects with: Project ID, Contract Type, Budgeted Cost, Contract Value, Actual Cost, CO2 Savings, Energy Savings, Status, Start Date, End Date, Property City, Property Type, and Energy Class before and after retrofit.</td></tr>
       </tbody>
     </table>
   </div>
